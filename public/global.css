@@ -11,6 +11,14 @@ table.center {
 	
 	background-color: white;	
 }
+
+#original {
+  width: 600px;
+  height: 250px;
+  margin: auto;
+  text-align: left;
+}
+
 .output tr:nth-child(odd)    { background-color:#eee; }
 .output tr:nth-child(even)   { background-color:#00FF66; }
 .error td{ background-color: red; }

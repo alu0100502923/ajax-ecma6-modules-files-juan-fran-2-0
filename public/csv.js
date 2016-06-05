@@ -2,6 +2,16 @@
 (() => {
 "use strict"; // Use ECMAScript 5 strict mode in browsers that support it
 
+var aceditor;
+
+$(document).ready(() => {
+        aceditor = ace.edit("original");
+        aceditor.setTheme("ace/theme/sqlserver");
+        aceditor.getSession().setMode("ace/mode/javascript");
+        aceditor.setShowPrintMargin(false);
+        aceditor.session.setUseWorker(false);
+    })
+
 const resultTemplate = `
 <div class="contenido">
       <table class="center" id="result">
@@ -26,7 +36,7 @@ const fillTable = (data) => {
  * #original el contenido del fichero fileName */
 const dump = (fileName) => {
   $.get(fileName, function (data) {
-      $("#original").val(data);
+      aceditor.setValue(data);
   });
 };
  
@@ -39,7 +49,7 @@ const handleFileSelect = (evt) => {
   var reader = new FileReader();
   reader.onload = (e) => {
 
-     $("#original").val(e.target.result);
+     aceditor.setValue(e.target.result);
   };
   reader.readAsText(files[0])
 }
@@ -54,7 +64,7 @@ const handleDragFileSelect = (evt) => {
   var reader = new FileReader();
   reader.onload = (e) => {
 
-        $("#original").val(e.target.result);
+        aceditor.setValue(e.target.result);
         evt.target.style.background = "white";
   };
   reader.readAsText(files[0])
@@ -69,14 +79,14 @@ const handleDragOver = (evt) => {
 $(document).ready(() => {
     let original = document.getElementById("original");  
     if (window.localStorage && localStorage.original) {
-      original.value = localStorage.original;
+      aceditor.setValue(localStorage.original);
     }
 
     /* Request AJAX para que se calcule la tabla */
     $("#parse").click(() => {
-            if (window.localStorage) localStorage.original = original.value;
+            if (window.localStorage) localStorage.original = aceditor.getValue();
             $.get("/csv", /* Request AJAX para que se calcule la tabla */ {
-                    input: original.value
+                    input: aceditor.getValue()
                 },
                 fillTable,
                 'json'
